@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+p,
+label,
+.a-form-item,
+.ant-typography,
+.ant-input,
+.ant-select,
+.ant-dropdown,
+.ant-menu,
+.ant-card,
+.ant-badge,
+.ant-list,
+.ant-message,
+.ant-tabs-nav-list,
+.ant-breadcrumb,
+.ant-breadcrumb-link,
+.ant-table-thead,
+.ant-table-cell {
+  color: #45474b;
+  /* color: red; */
+}

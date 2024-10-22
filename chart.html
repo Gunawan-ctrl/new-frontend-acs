@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curved Line Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@latest"></script>
+  </head>
+  <body>
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <script>
+      const ctx = document.getElementById('myChart').getContext('2d')
+
+      // Function to transform data
+      const transformYValue = (value) => {
+        // if (value === -100) return 0;
+        // if (value === -20) return 80;
+        // if (value === -45) return 55;
+        // if (value === -70) return 30;
+        // return value;
+        return value + 100
+      }
+
+      const reTransformYValue = (value) => {
+        return value - 100
+      }
+
+      const allowedXValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14]
+
+      const dataY = [-20, -45, -70]
+
+      const data = {
+        labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        datasets: [
+          {
+            label: 'Curve 1',
+            data: [
+              { x: -1.2, y: transformYValue(-100) },
+              { x: 1, y: transformYValue(-20) },
+              { x: 3.2, y: transformYValue(-100) }
+            ],
+            fill: true,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+            pointRadius: (context) => (context.dataIndex === 1 ? 2 : 0), // Show point only on the middle data point
+            pointHoverRadius: 0, // Disable hover effect
+            borderWidth: 1, // Smaller line width
+            tension: 0.3 // Adjusts the curvature of the line
+          },
+          {
+            label: 'Curve 2',
+            data: [
+              { x: 0.8, y: transformYValue(-100) },
+              { x: 3, y: transformYValue(-45) },
+              { x: 5.2, y: transformYValue(-100) }
+            ],
+            fill: true,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            pointRadius: (context) => (context.dataIndex === 1 ? 2 : 0), // Show point only on the middle data point
+            pointHoverRadius: 0, // Disable hover effect
+            borderWidth: 1, // Smaller line width
+            tension: 0.3 // Adjusts the curvature of the line
+          },
+          {
+            label: 'Curve 3',
+            data: [
+              { x: 4.8, y: transformYValue(-100) },
+              { x: 7, y: transformYValue(-70) },
+              { x: 9.2, y: transformYValue(-100) }
+            ],
+            fill: true,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            pointRadius: (context) => (context.dataIndex === 1 ? 2 : 0), // Show point only on the middle data point
+            pointHoverRadius: 0, // Disable hover effect
+            borderWidth: 1, // Smaller line width
+            tension: 0.3 // Adjusts the curvature of the line
+          }
+        ]
+      }
+      const config = {
+        type: 'line',
+        data: data,
+        options: {
+          plugins: {
+            tooltip: {
+              enabled: false // Disable tooltips
+            },
+            legend: {
+              display: false // Optionally disable legend
+            },
+            annotation: {
+              annotations: data.datasets.flatMap((dataset, datasetIndex) =>
+                dataset.data
+                  .map((point, dataIndex) =>
+                    dataIndex === 1
+                      ? {
+                          type: 'label',
+                          xValue: point.x,
+                          yValue: point.y + 1, // Position slightly above the point
+                          //content: transformYValue(point.y).toString(),
+                          content: reTransformYValue(point.y),
+                          backgroundColor: 'rgba(0,0,0,0)', // No background color
+                          borderColor: 'rgba(0,0,0,0)', // No border color
+                          font: {
+                            size: 12
+                          },
+                          color: 'black',
+                          position: 'top'
+                        }
+                      : null
+                  )
+                  .filter((annotation) => annotation !== null)
+              )
+            }
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              position: 'bottom',
+              title: {
+                display: true,
+                text: 'X Axis'
+              },
+              ticks: {
+                callback: function (value) {
+                  // Show only specific labels
+                  if (allowedXValues.includes(value)) {
+                    return value
+                  }
+                  return null // Hide other labels
+                },
+                stepSize: 1
+              }
+            },
+            y: {
+              min: 0,
+              max: 100,
+              title: {
+                display: true,
+                text: 'Y Axis'
+              },
+              ticks: {
+                callback: function (value) {
+                  // Show only specific labels
+                  // if (value === 80) return -20;
+                  // if (value === 55) return -45;
+                  // if (value === 30) return -70;
+                  // return null; // Hide other labels
+                  let v = value - 100
+                  if (dataY.includes(v)) {
+                    return v
+                  }
+                  return null
+                },
+                stepSize: 5
+              }
+            }
+          }
+        }
+      }
+
+      const myChart = new Chart(ctx, config)
+    </script>
+  </body>
+</html>
